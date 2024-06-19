@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Chat_Up_Call.css') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 에모칸 사라지기 코드  -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 알림창 css -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <!-- 글꼴 부트스트랩 -->
+    <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
+
+</head>
+<style>
+    /* 과목 대시보드 불러오는 박스 어딨는지 못찾았어요*/
+    .course-box {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    /* 버튼, 전체 글꼴 지정 */
+    .Button {
+        font-family: "Jua", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.7rem;
+        /* 버튼 안 글자 성질 조정  */
+    }
+
+    body {
+        font-family: "Jua", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.2rem;
+
+    }
+
+    /* 메뉴바와 푸터 구역 */
+    .gradient-background {
+        background-size: 180% 180%;
+        animation: gradient-animation 18s ease infinite;
+    }
+
+    @keyframes gradient-animation {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .divider:after,
+    .divider:before {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #eee;
+    }
+
+    .h-custom {
+        height: calc(100% - 73px);
+    }
+
+    @media (max-width: 1200px) {
+        .h-custom {
+            height: 140%;
+        }
+    }
+
+    .jua-regular {
+        font-family: "Jua", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.2rem;
+    }
+
+    #dropzone {
+        border: 2px dashed #ccc;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+    }
+
+    #dropzone p {
+        margin-top: 0;
+    }
+
+    #file-input {
+        display: flex;
+    }
+
+
+    /* Additional styling for the main content */
+    .main-content {
+        margin-bottom: 100px;
+        /* Adjust this value to fit the footer */
+    }
+
+    /* nav style */
+    .navbar {
+        background-color: transparent;
+        /* Adjust or remove the background */
+    }
+
+    /* Customize the navbar toggler icon */
+    .navbar-toggler {
+        border-color: rgba(255, 251, 251, 0.675);
+        /* Optional: change or remove the border */
+    }
+
+    .navbar-light .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    /* Additional customization for light backgrounds */
+    .navbar-light .navbar-toggler {
+        filter: invert(100%);
+        /* Makes the icon white if your navbar background is dark */
+    }
+
+
+
+ 
+
+
+
+       .popup_container {
+      
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border: 1px solid #000;
+            background-color: #fff;
+            z-index: 10000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+         
+            align-items: center;
+        }
+/* 팝업창 안 요소 위치 조정  */
+        .popup-input {
+            width: 80%;
+            height: 50px;
+            margin-bottom: 60px;
+            border: 3px solid black;
+            position: relative;
+            left: 7%;
+        }
+
+        .popup-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            position: relative;
+            left: 5%;
+        }
+
+        .popup-buttons button {
+            width: 45%;
+            height: 50px;
+            position: relative;
+            left: 5%;
+        }
+
+   
+
+</style>
+
+<body>
+
+    <!-- 메뉴뱌 구역 시작 -->
+    <header>
+        <div class="main_container" style="background-color: #aaf1ff;">
+            <!-- 메뉴바 컬러 지정  -->
+
+            <!-- 헤더 섹션  -->
+            <header class="p-3 mb-3 border-bottom">
+                <div class="container-fluid">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-between">
+                        <!-- ChatUpschool Text -->
+                        <span class="chatupschool-text">ChatUpSchool</span>
+
+                        <!-- 프로필 -->
+                        <div class="dropdown">
+                            <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+                                    class="rounded-circle">
+                            </a>
+                            <ul class="dropdown-menu text-small dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- 헤더 섹션 끝 -->
+        </div>
+    </header>
+    <!-- 메뉴바 구역 끝 -->
+
+
+    <div class="container1">
+
+
+          
+    <div>
+        <button type="button" class="bu" id="createbutton">supa확인버튼</button>
+        <button type="button" class="bu" id="coursesbutton" >과목정보 받아오기</button>
+        <button type="button" class="bu" id="addbutton" onclick="openModal()">추가</button>
+
+        <!-- 모달 -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <input type="text" id="dashboardId" placeholder="대시보드 ID"><br>
+                <input type="text" id="subjectName" placeholder="과목명"><br>
+                <input type="text" id="timetable" placeholder="시간표"><br>
+                <input type="text" id="classYear" placeholder="학년"><br>
+                <input type="text" id="className" placeholder="반"><br>
+                <button type="button" class="bu" onclick="addButton()">확인</button>
+            </div>
+        </div>
+      
+        <div id="coursesContainer"></div>
+    </div>
+
+
+
+        <div class="re">
+
+
+            <table id="timetable">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">시간/요일</th>
+                    <th>월</th>
+                    <th>화</th>
+                    <th>수</th>
+                    <th>목</th>
+                    <th>금</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1교시</td>
+                        <td id="월1"><div></div></td>
+                        <td id="화1"><div></div></td>
+                        <td id="수1"><div></div></td>
+                        <td id="목1"><div></div></td>
+                        <td id="금1"><div></div></td>
+                    </tr>
+                    <tr>
+                        <td>2교시</td>
+                        <td id="월2"><div></div></td>
+                        <td id="화2"><div></div></td>
+                        <td id="수2"><div></div></td>
+                        <td id="목2"><div></div></td>
+                        <td id="금2"><div></div></td>
+                    </tr>
+                    <tr>
+                        <td>3교시</td>
+                        <td id="월3"><div></div></td>
+                        <td id="화3"><div></div></td>
+                        <td id="수3"><div></div></td>
+                        <td id="목3"><div></div></td>
+                        <td id="금3"><div></div></td>
+                    </tr>
+                    <tr>
+                        <td>4교시</td>
+                        <td id="월4"><div></div></td>
+                        <td id="화4"><div></div></td>
+                        <td id="수4"><div></div></td>
+                        <td id="목4"><div></div></td>
+                        <td id="금4"><div></div></td>
+                    </tr>
+                    <tr>
+                        <td>5교시</td>
+                        <td id="월5"><div></div></td>
+                        <td id="화5"><div></div></td>
+                        <td id="수5"><div></div></td>
+                        <td id="목5"><div></div></td>
+                        <td id="금5"><div></div></td>
+                    </tr>
+                    <tr>
+                        <td>6교시</td>
+                        <td id="월6"><div></div></td>
+                        <td id="화6"><div></div></td>
+                        <td id="수6"><div></div></td>
+                        <td id="목6"><div></div></td>
+                        <td id="금6"><div></div></td>
+                    </tr>
+                    <tr>
+                        <td>7교시</td>
+                        <td id="월7"><div></div></td>
+                        <td id="화7"><div></div></td>
+                        <td id="수7"><div></div></td>
+                        <td id="목7"><div></div></td>
+                        <td id="금7"><div></div></td>
+                    </tr>
+                    <tr>
+                        <td>8교시</td>
+                        <td id="월8"><div></div></td>
+                        <td id="화8"><div></div></td>
+                        <td id="수8"><div></div></td>
+                        <td id="목8"><div></div></td>
+                        <td id="금8"><div></div></td>
+                    </tr>
+                  
+                  <!-- 나머지 시간표 셀들을 동일하게 추가 -->
+                </tbody>
+              </table>
+            
+    
+    
+    
+        </div>
+           
+     
+          
+</div>
+          
+    
+   
+
+
+<script>
+    // applyCourseData 함수 정의
+    // 문제점. 과목정보 받아오기 버튼을 한번 누르고 한번 더 누르면 시간표에 과목이 중복되어 출력됨. 이건 고쳐볼 예정  
+    function applyCourseData(data) {
+        const subjectColors = {}; // 과목별 색상을 저장하는 객체
+        const cellsUsed = {}; // 각 셀에 추가된 과목을 추적하는 객체
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function getSubjectColor(subject) {
+            if (subjectColors[subject]) {
+                return subjectColors[subject];
+            } else {
+                let randomColor;
+                do {
+                    randomColor = getRandomColor();
+                } while (isDarkColor(randomColor) || Object.values(subjectColors).includes(randomColor));
+                subjectColors[subject] = randomColor;
+                return randomColor;
+            }
+        }
+
+        data.forEach(entry => {
+            const subject = entry.과목명;
+            const timeslots = entry.시간표.split(',');
+
+            timeslots.forEach(slot => {
+                if (!cellsUsed[slot]) {
+                    cellsUsed[slot] = new Set();
+                }
+                if (!cellsUsed[slot].has(subject)) {
+                    cellsUsed[slot].add(subject);
+                    const cell = document.getElementById(slot).firstElementChild;
+                    if (cell) {
+                        const color = getSubjectColor(subject);
+                        const subjectDiv = document.createElement('div');
+                        subjectDiv.style.backgroundColor = color;
+                        subjectDiv.textContent = subject;
+                        subjectDiv.style.fontWeight = 'bold'; // 텍스트를 굵게 표시
+                     // 동일한 크기로 나누기 위해 flex 속성 추가
+                        cell.appendChild(subjectDiv);
+                    }
+                }
+            });
+        });
+    }
+
+    function clearTimetable() {
+        const cells = document.querySelectorAll('td div');
+        cells.forEach(cell => {
+            cell.innerHTML = '';
+        });
+    }
+
+    function isDarkColor(color) {
+        const rgb = hexToRgb(color);
+        const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+        return brightness < 128;
+    }
+
+    function hexToRgb(hex) {
+        const bigint = parseInt(hex.slice(1), 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = (bigint & 255);
+        return { r, g, b };
+    }
+
+
+ 
+
+
+    // mycourses 함수 정의
+    async function mycourses() {
+        alert("JS 실행중");
+
+        try {
+            const response = await fetch('/student/get_my_courses');
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data); // 시간표 표시를 위한 데이터
+                if (data.success) {
+                    alert('대시보드에서 과목정보를 불러왔습니다.');
+                    // clearTimetable 함수 호출
+                    clearTimetable();
+                    // applyCourseData 함수 호출
+                    applyCourseData(data.data);
+                } else {
+                    alert('유저 정보가 정확하지 않습니다.');
+                }
+            } else {
+                alert('서버에서 에러가 발생했습니다');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while retrieving courses');
+        }
+    }
+
+    // 페이지 로드 시 mycourses 함수 호출
+ 
+</script>
+
+
+<script>
+    function openModal() {
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("addbutton");
+
+        // 버튼의 위치와 크기 정보를 가져옴
+        var rect = btn.getBoundingClientRect();
+
+        // 모달을 버튼 아래로 위치시킴
+        modal.style.top = (rect.bottom + window.scrollY) + "px";
+        modal.style.left = (rect.left + window.scrollX) + "px";
+
+        modal.style.display = "block";
+    }
+
+    // 모달 외부를 클릭하면 모달을 닫음
+    window.onclick = function(event) {
+        var modal = document.getElementById("myModal");
+        var addButton = document.getElementById("addbutton");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // 모달 내부를 클릭해도 모달이 닫히지 않도록 이벤트 전파 막기
+    var modalContent = document.querySelector(".modal-content");
+    modalContent.onclick = function(event) {
+        event.stopPropagation(); // 이벤트 전파 막기
+    }
+
+
+    // 모달 확인 버튼 클릭 시 실행되는 함수
+    function addButton() {
+        
+        // 입력된 정보 가져오기
+        var dashboardId = document.getElementById("dashboardId").value;
+        var subjectName = document.getElementById("subjectName").value;
+        var timetable = document.getElementById("timetable").value;
+        var classYear = document.getElementById("classYear").value;
+        var className = document.getElementById("className").value;
+
+        // 여기 쪽에다가 데이터 베이스 쪽으로 올리는 함수 넣어주시면 될 것 같습니다!
+        // 일단 잘 들어가지는 확인을 위해 메시지 출력 형식으로 넣어놨습니다.
+         
+        var message = "대시보드 ID: " + dashboardId + "\n" +
+                  "과목명: " + subjectName + "\n" +
+                  "시간표: " + timetable + "\n" +
+                  "학년: " + classYear + "\n" +
+                  "반: " + className;
+
+        alert(message); // 메시지로 출력 (alert 창)
+        
+        // 모달 닫기
+        closeModal();
+        }
+        
+</script>
+  
+  
+
+ 
+
+
+
+
+
+    
+
+
+ 
+
+
+</body>
+
+</html>
